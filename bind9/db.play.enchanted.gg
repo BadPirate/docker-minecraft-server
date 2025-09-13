@@ -1,0 +1,10 @@
+$TTL    604800
+@       IN      SOA     play.enchanted.gg. admin.play.enchanted.gg. (
+                              1         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      play.enchanted.gg.
+@       IN      A       172.22.0.1

@@ -1,0 +1,10 @@
+$TTL    604800
+@       IN      SOA     play.galaxite.net. admin.play.galaxite.net. (
+                              1         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      play.galaxite.net.
+@       IN      A       172.22.0.1
