@@ -32,9 +32,7 @@ services:
     container_name: bedrockconnect-dns
     image: ubuntu/bind9:9.16-20.04_beta
     restart: unless-stopped
-    ports:
-      - "0.0.0.0:53:53/udp"
-      - "0.0.0.0:53:53/tcp"
+    network_mode: host
     volumes:
       - ./bind9:/etc/bind
     command: ["named", "-g", "-c", "/etc/bind/named.conf", "-u", "bind"]
