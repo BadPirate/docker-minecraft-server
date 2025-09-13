@@ -11,7 +11,7 @@ services:
       - "25565:25565"
       - "19133:19132/udp"
     volumes:
-      - data:/data
+      - mc_data:/data
     stdin_open: true
     tty: true
     restart: unless-stopped
@@ -26,6 +26,8 @@ services:
       USER_SERVERS: "true"
       CUSTOM_SERVERS: "/brc/custom_servers.json"
     volumes:
-      - /data/minecraft/custom_servers.json:/brc/custom_servers.json
+      - brc_data:/brc
+      - brc_data/custom_servers.json:/brc/custom_servers.json
 volumes:
-  data: {}
+  mc_data: {}
+  brc_data: {}
