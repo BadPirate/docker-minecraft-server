@@ -11,7 +11,7 @@ services:
       - "25565:25565"
       - "19133:19132/udp"
     volumes:
-      - mc_data:/data
+      - /data/minecraft/mc:/data
     stdin_open: true
     tty: true
     restart: unless-stopped
@@ -26,8 +26,8 @@ services:
       USER_SERVERS: "true"
       CUSTOM_SERVERS: "/brc/custom_servers.json"
     volumes:
-      - brc_data:/brc
-      - ./custom_servers.json:/brc/custom_servers.json:ro
+      - /data/minecraft/brc:/brc
+      - /data/minecraft/brc/custom_servers.json:/brc/custom_servers.json:ro
   dns:
     container_name: bedrockconnect-dns
     image: ubuntu/bind9:9.16-20.04_beta
@@ -36,6 +36,3 @@ services:
     volumes:
       - ./bind9:/etc/bind
     command: ["named", "-g", "-c", "/etc/bind/named.conf", "-u", "bind"]
-volumes:
-  mc_data: {}
-  brc_data: {}
