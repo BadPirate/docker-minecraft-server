@@ -15,6 +15,20 @@ services:
     stdin_open: true
     tty: true
     restart: unless-stopped
+  
+  dns-init:
+    image: alpine:latest
+    volumes:
+      - bind_config:/etc/bind
+      - ./bind9:/source
+    command: >
+      sh -c "
+        echo 'Copying DNS configuration files...'
+        cp -r /source/* /etc/bind/
+        chmod -R 644 /etc/bind/*
+        echo 'DNS configuration copied successfully'
+      "
+  
   bedrockconnect:
     container_name: bedrockconnect
     image: pugmatt/bedrock-connect
@@ -28,11 +42,17 @@ services:
     volumes:
       - /data/minecraft/brc:/brc
       - /data/minecraft/brc/custom_servers.json:/brc/custom_servers.json:ro
+  
   dns:
     container_name: bedrockconnect-dns
     image: ubuntu/bind9:9.16-20.04_beta
     restart: unless-stopped
     network_mode: host
+    depends_on:
+      - dns-init
     volumes:
-      - ./bind9:/etc/bind
+      - bind_config:/etc/bind
     command: ["named", "-g", "-c", "/etc/bind/named.conf", "-u", "bind"]
+
+volumes:
+  bind_config: {}
