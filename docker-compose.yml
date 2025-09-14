@@ -16,8 +16,6 @@ services:
     tty: true
     restart: unless-stopped
   
-  
-  
   bedrockconnect:
     container_name: bedrockconnect
     image: pugmatt/bedrock-connect
@@ -73,7 +71,7 @@ services:
 
         - path: /etc/bind/db.hivebedrock.network
           content: |
-            $TTL 604800
+            $$TTL 604800
             @ IN SOA hivebedrock.network. admin.hivebedrock.network. (1 604800 86400 2419200 604800)
             @ IN NS  hivebedrock.network.
             @ IN A   192.168.68.105
@@ -81,28 +79,28 @@ services:
 
         - path: /etc/bind/db.play.inpvp.net
           content: |
-            $TTL 604800
+            $$TTL 604800
             @ IN SOA play.inpvp.net. admin.play.inpvp.net. (1 604800 86400 2419200 604800)
             @ IN NS  play.inpvp.net.
             @ IN A   192.168.68.105
 
         - path: /etc/bind/db.mco.lbsg.net
           content: |
-            $TTL 604800
+            $$TTL 604800
             @ IN SOA mco.lbsg.net. admin.mco.lbsg.net. (1 604800 86400 2419200 604800)
             @ IN NS  mco.lbsg.net.
             @ IN A   192.168.68.105
 
         - path: /etc/bind/db.play.galaxite.net
           content: |
-            $TTL 604800
+            $$TTL 604800
             @ IN SOA play.galaxite.net. admin.play.galaxite.net. (1 604800 86400 2419200 604800)
             @ IN NS  play.galaxite.net.
             @ IN A   192.168.68.105
 
         - path: /etc/bind/db.play.enchanted.gg
           content: |
-            $TTL 604800
+            $$TTL 604800
             @ IN SOA play.enchanted.gg. admin.play.enchanted.gg. (1 604800 86400 2419200 604800)
             @ IN NS  play.enchanted.gg.
             @ IN A   192.168.68.105
