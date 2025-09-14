@@ -1,5 +1,5 @@
 services:
-  mc:
+  minecraft-one:
     image: itzg/minecraft-server
     environment:
       EULA: "true"
@@ -11,7 +11,7 @@ services:
       - "25565:25565"
       - "19133:19132/udp"
     volumes:
-      - /data/minecraft/mc:/data
+      - minecraft-one:/data
     stdin_open: true
     tty: true
     restart: unless-stopped
@@ -27,7 +27,7 @@ services:
       USER_SERVERS: "true"
       CUSTOM_SERVERS: "/brc/custom_servers.json"
     volumes:
-      - /data/minecraft/brc:/brc
+      - bedrockconnect:/brc
     x-coolify:
       files:
         - path: /brc/custom_servers.json
@@ -43,67 +43,13 @@ services:
   
   dns:
     container_name: bedrockconnect-dns
-    image: ubuntu/bind9:9.16-20.04_beta
+    build:
+      context: .
+      dockerfile: bind9/Dockerfile
     restart: unless-stopped
     network_mode: host
-    volumes:
-      - bind_config:/etc/bind
     command: ["named", "-g", "-c", "/etc/bind/named.conf", "-u", "bind"]
-    x-coolify:
-      files:
-        - path: /etc/bind/named.conf
-          content: |
-            options {
-                directory "/var/cache/bind";
-                forwarders { 8.8.8.8; 1.1.1.1; };
-                forward only;
-                dnssec-validation no;
-                auth-nxdomain no;
-                listen-on-v6 { any; };
-                allow-query { any; };
-            };
-
-            zone "hivebedrock.network" { type master; file "/etc/bind/db.hivebedrock.network"; };
-            zone "play.inpvp.net"       { type master; file "/etc/bind/db.play.inpvp.net"; };
-            zone "mco.lbsg.net"         { type master; file "/etc/bind/db.mco.lbsg.net"; };
-            zone "play.galaxite.net"    { type master; file "/etc/bind/db.play.galaxite.net"; };
-            zone "play.enchanted.gg"    { type master; file "/etc/bind/db.play.enchanted.gg"; };
-
-        - path: /etc/bind/db.hivebedrock.network
-          content: |
-            $$TTL 604800
-            @ IN SOA hivebedrock.network. admin.hivebedrock.network. (1 604800 86400 2419200 604800)
-            @ IN NS  hivebedrock.network.
-            @ IN A   192.168.68.105
-            geo IN A 192.168.68.105
-
-        - path: /etc/bind/db.play.inpvp.net
-          content: |
-            $$TTL 604800
-            @ IN SOA play.inpvp.net. admin.play.inpvp.net. (1 604800 86400 2419200 604800)
-            @ IN NS  play.inpvp.net.
-            @ IN A   192.168.68.105
-
-        - path: /etc/bind/db.mco.lbsg.net
-          content: |
-            $$TTL 604800
-            @ IN SOA mco.lbsg.net. admin.mco.lbsg.net. (1 604800 86400 2419200 604800)
-            @ IN NS  mco.lbsg.net.
-            @ IN A   192.168.68.105
-
-        - path: /etc/bind/db.play.galaxite.net
-          content: |
-            $$TTL 604800
-            @ IN SOA play.galaxite.net. admin.play.galaxite.net. (1 604800 86400 2419200 604800)
-            @ IN NS  play.galaxite.net.
-            @ IN A   192.168.68.105
-
-        - path: /etc/bind/db.play.enchanted.gg
-          content: |
-            $$TTL 604800
-            @ IN SOA play.enchanted.gg. admin.play.enchanted.gg. (1 604800 86400 2419200 604800)
-            @ IN NS  play.enchanted.gg.
-            @ IN A   192.168.68.105
 
 volumes:
-  bind_config: {}
+  bedrockconnect: {}
+  minecraft-one: {}
