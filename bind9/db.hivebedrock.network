@@ -7,5 +7,5 @@ $TTL    604800
                          604800 )       ; Negative Cache TTL
 ;
 @       IN      NS      hivebedrock.network.
-@       IN      A       172.22.0.1
-geo     IN      A       172.22.0.1
+@       IN      A       192.168.68.105
+geo     IN      A       192.168.68.105
