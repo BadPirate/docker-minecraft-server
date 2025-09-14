@@ -11,7 +11,7 @@ services:
       - "25565:25565"
       - "19133:19132/udp"
     volumes:
-      - /data/minecraft/mc:/data
+      - mc_data:/data
     stdin_open: true
     tty: true
     restart: unless-stopped
@@ -20,122 +20,11 @@ services:
     container_name: bedrockconnect-dns
     image: ubuntu/bind9:9.16-20.04_beta
     restart: unless-stopped
-    network_mode: host
+    ports:
+      - "53:53/udp"
+      - "53:53/tcp"
     volumes:
-      - type: bind
-        source: ./named.conf
-        target: /etc/bind/named.conf
-        content: |
-          options {
-              directory "/var/cache/bind";
-              forwarders {
-                  8.8.8.8;
-                  1.1.1.1;
-              };
-              forward only;
-              dnssec-validation no;
-              auth-nxdomain no;
-              listen-on-v6 { any; };
-              allow-query { any; };
-          };
-
-          // Official BedrockConnect zones as per https://github.com/Pugmatt/BedrockConnect/wiki/Using-your-own-DNS-server
-
-          zone "hivebedrock.network" {
-              type master;
-              file "/etc/bind/db.hivebedrock.network";
-          };
-
-          zone "play.inpvp.net" {
-              type master;
-              file "/etc/bind/db.play.inpvp.net";
-          };
-
-          zone "mco.lbsg.net" {
-              type master;
-              file "/etc/bind/db.mco.lbsg.net";
-          };
-
-          zone "play.galaxite.net" {
-              type master;
-              file "/etc/bind/db.play.galaxite.net";
-          };
-
-          zone "play.enchanted.gg" {
-              type master;
-              file "/etc/bind/db.play.enchanted.gg";
-          };
-      - type: bind
-        source: ./db.hivebedrock.network
-        target: /etc/bind/db.hivebedrock.network
-        content: |
-          $TTL    604800
-          @       IN      SOA     hivebedrock.network. admin.hivebedrock.network. (
-                                        1         ; Serial
-                                   604800         ; Refresh
-                                    86400         ; Retry
-                                  2419200         ; Expire
-                                   604800 )       ; Negative Cache TTL
-          ;
-          @       IN      NS      hivebedrock.network.
-          @       IN      A       192.168.68.105
-          geo     IN      A       192.168.68.105
-      - type: bind
-        source: ./db.play.inpvp.net
-        target: /etc/bind/db.play.inpvp.net
-        content: |
-          $TTL    604800
-          @       IN      SOA     play.inpvp.net. admin.play.inpvp.net. (
-                                        1         ; Serial
-                                   604800         ; Refresh
-                                    86400         ; Retry
-                                  2419200         ; Expire
-                                   604800 )       ; Negative Cache TTL
-          ;
-          @       IN      NS      play.inpvp.net.
-          @       IN      A       192.168.68.105
-      - type: bind
-        source: ./db.mco.lbsg.net
-        target: /etc/bind/db.mco.lbsg.net
-        content: |
-          $TTL    604800
-          @       IN      SOA     mco.lbsg.net. admin.mco.lbsg.net. (
-                                        1         ; Serial
-                                   604800         ; Refresh
-                                    86400         ; Retry
-                                  2419200         ; Expire
-                                   604800 )       ; Negative Cache TTL
-          ;
-          @       IN      NS      mco.lbsg.net.
-          @       IN      A       192.168.68.105
-      - type: bind
-        source: ./db.play.galaxite.net
-        target: /etc/bind/db.play.galaxite.net
-        content: |
-          $TTL    604800
-          @       IN      SOA     play.galaxite.net. admin.play.galaxite.net. (
-                                        1         ; Serial
-                                   604800         ; Refresh
-                                    86400         ; Retry
-                                  2419200         ; Expire
-                                   604800 )       ; Negative Cache TTL
-          ;
-          @       IN      NS      play.galaxite.net.
-          @       IN      A       192.168.68.105
-      - type: bind
-        source: ./db.play.enchanted.gg
-        target: /etc/bind/db.play.enchanted.gg
-        content: |
-          $TTL    604800
-          @       IN      SOA     play.enchanted.gg. admin.play.enchanted.gg. (
-                                        1         ; Serial
-                                   604800         ; Refresh
-                                    86400         ; Retry
-                                  2419200         ; Expire
-                                   604800 )       ; Negative Cache TTL
-          ;
-          @       IN      NS      play.enchanted.gg.
-          @       IN      A       192.168.68.105
+      - ./bind9:/etc/bind
     command: ["named", "-g", "-c", "/etc/bind/named.conf", "-u", "bind"]
   
   bedrockconnect:
@@ -149,5 +38,9 @@ services:
       USER_SERVERS: "true"
       CUSTOM_SERVERS: "/brc/custom_servers.json"
     volumes:
-      - /data/minecraft/brc:/brc
-      - /data/minecraft/brc/custom_servers.json:/brc/custom_servers.json:ro
+      - brc_data:/brc
+      - ./custom_servers.json:/brc/custom_servers.json:ro
+
+volumes:
+  mc_data: {}
+  brc_data: {}
