@@ -20,13 +20,25 @@ services:
     image: alpine:latest
     volumes:
       - bind_config:/etc/bind
-      - ./bind9:/source
+      - .:/app
+    working_dir: /app
     command: >
       sh -c "
-        echo 'Copying DNS configuration files...'
-        cp -r /source/* /etc/bind/
-        chmod -R 644 /etc/bind/*
-        echo 'DNS configuration copied successfully'
+        echo 'Checking available files...'
+        ls -la /app/
+        echo 'Looking for bind9 directory...'
+        if [ -d '/app/bind9' ]; then
+          echo 'Found bind9 directory, copying files...'
+          cp -r /app/bind9/* /etc/bind/
+          chmod -R 644 /etc/bind/*
+          echo 'DNS configuration copied successfully'
+          ls -la /etc/bind/
+        else
+          echo 'ERROR: bind9 directory not found!'
+          echo 'Available directories:'
+          find /app -type d -name '*bind*' 2>/dev/null || echo 'No bind directories found'
+          exit 1
+        fi
       "
   
   bedrockconnect:
