@@ -1,55 +1,30 @@
 services:
   minecraft-one:
+    container_name: OneBlock
     image: itzg/minecraft-server
     environment:
-      EULA: "true"
+      EULA: "TRUE"
       TYPE: "PAPER"
+      VERSION: "1.21.8"
+      MOTD: "Welcome to LohCraft 1 Block!"
+      ICON: "https://i.imgur.com/L3pjNKN.png"
+      TZ: "America/Los_Angeles"
+      MODRINTH_PROJECTS: |-
+        multiverse-core
+        oneblock_bukkit
+      MODRINTH_LOADER: "bukkit"
+      MODRINTH_ALLOWED_VERSION_TYPE: "release"
       PLUGINS: |
         https://download.geysermc.org/v2/projects/geyser/versions/latest/builds/latest/downloads/spigot
         https://download.geysermc.org/v2/projects/floodgate/versions/latest/builds/latest/downloads/spigot
     ports:
       - "25565:25565"
-      - "19133:19132/udp"
+      - "19132:19132/udp"
     volumes:
       - minecraft-one:/data
     stdin_open: true
     tty: true
     restart: unless-stopped
-  
-  bedrockconnect:
-    container_name: bedrockconnect
-    image: pugmatt/bedrock-connect
-    restart: unless-stopped
-    ports:
-      - "19132:19132/udp"
-    environment:
-      FEATURED_SERVERS: "true"
-      USER_SERVERS: "true"
-      CUSTOM_SERVERS: "/brc/custom_servers.json"
-    volumes:
-      - bedrockconnect:/brc
-    x-coolify:
-      files:
-        - path: /brc/custom_servers.json
-          content: |
-            [
-              {
-                "name": "Minecraft 1",
-                "address": "mc",
-                "iconUrl": "https://i.imgur.com/L3pjNKN.png",
-                "port": 19133
-              }
-            ]
-  
-  dns:
-    container_name: bedrockconnect-dns
-    build:
-      context: .
-      dockerfile: bind9/Dockerfile
-    restart: unless-stopped
-    network_mode: host
-    command: ["named", "-g", "-c", "/etc/bind/named.conf", "-u", "bind"]
 
 volumes:
-  bedrockconnect: {}
   minecraft-one: {}
