@@ -25,6 +25,15 @@ services:
     stdin_open: true
     tty: true
     restart: unless-stopped
+  
+  dns:
+    container_name: bedrockconnect-dns
+    build:
+      context: .
+      dockerfile: bind9/Dockerfile
+    restart: unless-stopped
+    network_mode: host
+    command: ["named", "-g", "-c", "/etc/bind/named.conf", "-u", "bind"]
 
 volumes:
   minecraft-one: {}
