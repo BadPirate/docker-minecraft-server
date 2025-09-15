@@ -17,6 +17,7 @@ services:
       PLUGINS: |
         https://download.geysermc.org/v2/projects/geyser/versions/latest/builds/latest/downloads/spigot
         https://download.geysermc.org/v2/projects/floodgate/versions/latest/builds/latest/downloads/spigot
+        https://hangarcdn.papermc.io/plugins/Rutger/BlockLocker/versions/1.13/PAPER/BlockLocker.jar
     ports:
       - "25565:25565"
       - "19132:19132/udp"
