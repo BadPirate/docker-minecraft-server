@@ -11,7 +11,7 @@ services:
       TZ: "America/Los_Angeles"
       MODRINTH_PROJECTS: |-
         multiverse-core
-        oneblock_bukkit
+        aoneblock
       MODRINTH_LOADER: "bukkit"
       MODRINTH_ALLOWED_VERSION_TYPE: "release"
       PLUGINS: |
